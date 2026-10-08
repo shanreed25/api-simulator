@@ -66,6 +66,11 @@ export const fetchProductCatalog = (): Promise<Product[]> => {
 export const fetchProductReviews = (productId: number): Promise<Review[]>  => {
     return new Promise((reslove, reject) => {
         setTimeout(() => {
+            //code to force failure for testing
+            // if(productId === 2){
+            //     reject(`Failed to fetch reviews for product with ID: ${productId}`)
+            // }
+
             if (Math.random() < 0.8) {
                 reslove(reviews.filter(r => r.productId === productId))
             } else {

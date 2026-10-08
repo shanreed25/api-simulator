@@ -23,7 +23,8 @@ function loadData() {
       console.error("Could not load products:", err);
       return []; //if it fails the chain continues with no products
     })
-    .then((products) => {//=============================this give me a products array
+    .then((products) => {
+      //=============================this give me a products array
       //get reviews for every product and display them
       console.log("Waiting for Reviews......");
       //I have 6 reviews so reviewPromises holds 5 pending Promises and I need to wait for them all and Promise.all waits and collects the results
@@ -32,29 +33,45 @@ function loadData() {
       );
       //console.log(reviewPromises);//[ Promise { <pending> }, Promise { <pending> }, Promise { <pending> } ]
 
-      //Promise.all waits for all six Promises to resolve
-      //then puts each one’s result into a new array(reviewList) in 
-      // the same position as its Promise
-      return Promise.all(reviewPromises).then((reviewsList) => {
+      //with Promise.all one failure lost all six reviews
+      //Promise.allSettled Instead of rejecting when one call fails,
+      // it waits for every Promise to finish and tells you how each one turned out
+      //returns an array where each iem holds a result object describing what happened instead
+      return Promise.allSettled(reviewPromises).then((results) => {
         //reviewsList is a list of arrays, where each array contains all the reviews for a give product
         // like [[{productId: 1,reviewer: 'Maya R.'.....}], [{productId: 2, reviewer: 'Tara J.'.....}], [{productId: 3, reviewer: 'Shannon R.'.....}]],
-        products.forEach((product, index) => {
-          const reviews = reviewsList[index] ?? [];
+        products.forEach((product, i) => {
+          const result = results[i];//gets product’s result object
           // log product.name
           console.log(`Reviews for ${product.name}:`);
 
-          //then the reviews or "No reviews yet"
+          if (!result) {//without this there is a warning saying 'result' is possibly 'undefined'
+            return;
+          }
+
+          //status is either "fulfilled" or "rejected"
+          //use narrowing to check if status is rejected it knows result must be the fulfilled kind
+          if (result.status === "rejected") {
+            console.error("Could not load reviews: ", result.reason);//reason holds whatever was passed to reject
+            return;
+          }
+
+
+          //if the code makes it here then it knows result must be the fulfilled
+          //so I can use result.value
+          const reviews = result.value;
           if (reviews.length === 0) {
             console.log("  No reviews yet");
           }
           reviews.forEach((review) => {
-            console.log(`   ${review.rating}/5 ${review.reviewer}: ${review.comment}`,);
+            console.log(
+              `   ${review.rating}/5 ${review.reviewer}: ${review.comment}`,
+            );
           });
         });
       });
     });
 }
-
 
 //     .then((salesReport) => {
 //         console.log(salesReport);
