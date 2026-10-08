@@ -29,3 +29,10 @@ npx tsc
 ```bash
 node dist/index.js
 ```
+
+
+- [X] Part 1: Set Up Your Project
+- [X] Part 2: Implement API Simulation Functions
+- [ ] Part 3: Build the Main Application Logic
+- [ ] Part 4: Custom Error Classes
+- [ ] Part 5: Optional Challenge
