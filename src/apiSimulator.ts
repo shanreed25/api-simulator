@@ -27,10 +27,12 @@ const products: Product[] = [
 
 const reviews: Review[] = [
   { productId: 1, reviewer: "Maya R.", rating: 5, comment: "Fast and the battery lasts all day." },
-  { productId: 1, reviewer: "Devon K.", rating: 4, comment: "Great screen, but it runs a little warm." },
+  { productId: 2, reviewer: "Tara J.", rating: 2, comment: "Ear cushions started peeling after a month." },
+  { productId: 3, reviewer: "Shannon R.", rating: 2, comment: "Feels really nice." },
   { productId: 1, reviewer: "Priya S.", rating: 3, comment: "Good performance, heavier than expected." },
   { productId: 2, reviewer: "Luis M.", rating: 5, comment: "Noise cancelling works really well." },
-  { productId: 2, reviewer: "Tara J.", rating: 2, comment: "Ear cushions started peeling after a month." },
+  { productId: 3, reviewer: "Devon K.", rating: 4, comment: "Great scroll and easy movement." },
+  
 ]
 
 const salesReport: SalesReport = {
