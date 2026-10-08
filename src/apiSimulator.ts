@@ -13,6 +13,17 @@ export interface Review {
     comment: string;
 }
 
+export interface SalesReport {
+    totalSales: number;
+    unitsSold: number;
+    averagePrice: number;
+}
+
+const products: Product[] = [
+    { id: 1, name: "Laptop", price: 1200 },
+    { id: 2, name: "Headphones", price: 200 },
+    { id: 3, name: "Wireless Mouse", price: 45 },                   
+]
 
 const reviews: Review[] = [
   { productId: 1, reviewer: "Maya R.", rating: 5, comment: "Fast and the battery lasts all day." },
@@ -21,6 +32,12 @@ const reviews: Review[] = [
   { productId: 2, reviewer: "Luis M.", rating: 5, comment: "Noise cancelling works really well." },
   { productId: 2, reviewer: "Tara J.", rating: 2, comment: "Ear cushions started peeling after a month." },
 ]
+
+const salesReport: SalesReport = {
+    totalSales: 50700,
+    unitsSold: 150,
+    averagePrice: 338,//total sales divided by units sold: 50,700 ÷ 150 = 338
+}
 
 /* Promise<Product[]> tells TypeScript the function returns a Promise 
     that will eventually hold an array of Product objects
@@ -33,11 +50,7 @@ export const fetchProductCatalog = (): Promise<Product[]> => {
             //set the threshold to 0 and the call always fails
             if (Math.random() < 0.8) {
                 //resolve when the roll is under a threshold such as 0.8
-                resolve([
-                        { id: 1, name: "Laptop", price: 1200 },
-                        { id: 2, name: "Headphones", price: 200 },
-                        { id: 3, name: "Wireless Mouse", price: 45 },
-                    ]);
+                resolve(products);
             } else {
                 //reject with "Failed to fetch product catalog" otherwise
                 reject("Failed to fetch product catalog");
@@ -51,12 +64,26 @@ export const fetchProductCatalog = (): Promise<Product[]> => {
 export const fetchProductReviews = (productId: number): Promise<Review[]>  => {
     return new Promise((reslove, reject) => {
         setTimeout(() => {
-            if (Math.random() < 0) {
+            if (Math.random() < 0.8) {
                 reslove(reviews.filter(r => r.productId === productId))
             } else {
-                reject(`There is no review for the product with the id: ${productId}`)
+                reject(`Failed to fetch reviews for product with ID: ${productId}`)
             }
         }, 1500)
+        
+    }
+)
+}
+
+export const fetchSalesReport = (): Promise<SalesReport>  => {
+    return new Promise((reslove, reject) => {
+        setTimeout(() => {
+            if (Math.random() < 0.8) {
+                reslove(salesReport)
+            } else {
+                reject("Failed to fetch sales report")
+            }
+        }, 1000)
         
     }
 )

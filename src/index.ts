@@ -1,5 +1,6 @@
 import { fetchProductCatalog } from "./apiSimulator.js";
 import { fetchProductReviews } from "./apiSimulator.js";
+import { fetchSalesReport } from "./apiSimulator.js";
 
 console.log("Simulation Starting......");
 
@@ -15,5 +16,13 @@ fetchProductReviews(1)
 })
 .catch((err) => console.error('Error:', err))
 
+
+fetchSalesReport()
+.then((salesReport) => {
+    console.log(salesReport);
+})
+.catch((err) => {
+    console.error('Error:', err);
+})
 
 console.log('Waiting for Products......');
