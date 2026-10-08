@@ -36,3 +36,4 @@ node dist/index.js
 - [ ] Part 3: Build the Main Application Logic
 - [ ] Part 4: Custom Error Classes
 - [ ] Part 5: Optional Challenge
+

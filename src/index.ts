@@ -1,46 +1,75 @@
-import { fetchProductCatalog } from "./apiSimulator.js";
-import { fetchProductReviews } from "./apiSimulator.js";
-import { fetchSalesReport } from "./apiSimulator.js";
+import { 
+    fetchProductCatalog, 
+    fetchProductReviews, 
+    fetchSalesReport 
+} from "./apiSimulator.js";
+
+import type { Product, Review } from "./apiSimulator.js";
 
 console.log("Simulation Starting......");
 
 
 
-console.log('Waiting for Products......');
-
 function loadData(){
+    console.log('Waiting for Products......');
+
     fetchProductCatalog()
     .then((products) => {
-
-        if (!products[0]){//check before using it
-            throw new Error("No products")//throwing inside a .then() sends the error to .catch()
-        }
-
         products.forEach((product) => {
             console.log(`Product: ${product.name} $ ${product.price.toFixed(2)}`);
         })
-        
-        console.log('Waiting for Reviews......');
-        return fetchProductReviews(products[0].id)
-        /*
-        //non-null assertion !: tells TypeScript "trust me, this isn't undefined"
-        //error disappears, but you lose the safety: an empty array would still 
-        // crash at runtime. Fine for a quick test, risky as a habit.
-        return fetchProductReviews(products[0]!.id)
-        // return fetchProductReviews(1);
-        */
+        return products;
     })
-    .then((reviews) => {
-        console.log('Reviews', reviews);
-        console.log('Waiting for Sales Report......');
-        return fetchSalesReport();
+    .catch((err): Product[] => {
+        console.error("Could not load products:", err);
+        return [];//if it fails the chain continues with no products
     })
-    .then((salesReport) => {
-        console.log(salesReport);
-    })
-    .catch((err) => {
-        console.error('Error:', err);
+    /*
+    Since the above can return either a plain value or a Promise
+    If it's a plain value, the next step receives it immediately
+    If it's a Promise, the chain waits for it and passes along the resolved value
+    So, the next .then() receives a plain Review[], never a Promise
+    */
+    .then((products): Promise<Review[]> | Review[] => {
+        if (!products[0]){
+            return [];//will be a empty Review[] 
+         }
+         return fetchProductReviews(products[0].id);//will be a Review[] with values
     })
 }
+
+
+// function loadData(){
+//     console.log('Waiting for Products......');
+
+//     fetchProductCatalog()
+//     .then((products) => {
+
+//         if (!products[0]){
+//             throw new Error("No products")
+//         }
+
+//         products.forEach((product) => {
+//             console.log(`Product: ${product.name} $ ${product.price.toFixed(2)}`);
+//         })
+        
+//         console.log('Waiting for Reviews......');
+//         return fetchProductReviews(products[0].id)
+//     })
+//     .then((reviews) => {
+//         console.log('Reviews', reviews);
+//         console.log('Waiting for Sales Report......');
+//         return fetchSalesReport();
+//     })
+//     .then((salesReport) => {
+//         console.log(salesReport);
+//     })
+//     /*
+//     one catch at the end here means any failure skips every step after it
+//     */
+//     .catch((err) => {
+//         console.error('Error:', err);
+//     })
+// }
 
 loadData();
