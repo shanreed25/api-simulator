@@ -51,7 +51,11 @@ export const fetchProductCatalog = (): Promise<Product[]> => {
 export const fetchProductReviews = (productId: number): Promise<Review[]>  => {
     return new Promise((reslove, reject) => {
         setTimeout(() => {
-            reslove(reviews.filter(r => r.productId === productId))
+            if (Math.random() < 0) {
+                reslove(reviews.filter(r => r.productId === productId))
+            } else {
+                reject(`There is no review for the product with the id: ${productId}`)
+            }
         }, 1500)
         
     }

@@ -9,10 +9,11 @@ fetchProductCatalog()
 })
 .catch((err) => console.error('Error:', err))//reject sends an error to .catch()
 
-fetchProductReviews(5)
+fetchProductReviews(1)
 .then((reviews) => {
     console.log('Reviews', reviews);
 })
+.catch((err) => console.error('Error:', err))
 
 
 console.log('Waiting for Products......');
