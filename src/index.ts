@@ -13,28 +13,28 @@ console.log("Simulation Starting......");
 function loadData(){
     console.log('Waiting for Products......');
 
-    fetchProductCatalog()
+    fetchProductCatalog()//display products
     .then((products) => {
         products.forEach((product) => {
             console.log(`Product: ${product.name} $ ${product.price.toFixed(2)}`);
         })
         return products;
     })
-    .catch((err): Product[] => {
+    .catch((err): Product[] => {//log error and continue with no products
         console.error("Could not load products:", err);
         return [];//if it fails the chain continues with no products
     })
-    /*
-    Since the above can return either a plain value or a Promise
-    If it's a plain value, the next step receives it immediately
-    If it's a Promise, the chain waits for it and passes along the resolved value
-    So, the next .then() receives a plain Review[], never a Promise
-    */
-    .then((products): Promise<Review[]> | Review[] => {
-        if (!products[0]){
-            return [];//will be a empty Review[] 
-         }
-         return fetchProductReviews(products[0].id);//will be a Review[] with values
+    .then((products) => {//get reviews for every product and display them
+        console.log("Waiting for Reviews......");
+         //I have 5 reviews so reviewPromises holds 5 pending Promises and I need to wait for them all
+         const reviewPromises = products.map((product) => fetchProductReviews(product.id));
+         
+         return Promise.all(reviewPromises)
+                .then((reviews) => {
+                    products.forEach((product, index) => {
+                        const
+                    })
+                })
     })
 }
 
