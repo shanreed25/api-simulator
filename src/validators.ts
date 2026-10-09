@@ -3,8 +3,7 @@ import type { Product, Review, SalesReport } from "./types.js";
 
 
 //needs to accepts products with missing fields
-//Partial<Product> is the Product type with every field made optional
-//returns a DataError for the FIRST bad review, or null if all are valid.
+//Partial<Product> is the Product type with every field made optional.
 export function validateProduct(products: Partial<Product>[]): DataError | null {
 
      for (const product of products) {
@@ -33,14 +32,18 @@ export function validateProduct(products: Partial<Product>[]): DataError | null 
 export function validateReviews(reviews: Partial<Review>[]): DataError | null {
 
     for (const review of reviews){
+         if(typeof review.rating!== "number"){
+            return new DataError("Review is missing a rating")
+        }
 
+        if (review.rating < 1 || review.rating > 5) {
+            return new DataError(`Review has a rating of ${review.rating}, but rating must be 1 to 5`);
+        }
     }
-
+    return null;
 }
 
-export function validateSalesReport(salesReport: Partial<SalesReport>[]): DataError | null {
-
-    for (const report of salesReport){
+export function validateSalesReport(report: Partial<SalesReport>): DataError | null {
         if(typeof report.totalSales !== "number"){
             return new DataError("Sales report is missing total sales")
         }
@@ -53,7 +56,6 @@ export function validateSalesReport(salesReport: Partial<SalesReport>[]): DataEr
             return new DataError("Sales report is missing average price")
         }
 
-    }
     return null;
 
 }

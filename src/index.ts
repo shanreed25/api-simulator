@@ -4,7 +4,7 @@ import {
   fetchSalesReport,
 } from "./apiSimulator.js";
 
-import type { Product, Review, SalesReport } from "./types.js";
+import type { Product} from "./types.js";
 
 
 console.log("Simulation Starting......");
@@ -12,76 +12,83 @@ console.log("Simulation Starting......");
 function loadData() {
   console.log("Waiting for Products......");
 
-  fetchProductCatalog() //display products
+  fetchProductCatalog()
+
+    // display products
     .then((products) => {
       products.forEach((product) => {
-        console.log(`Product: ${product.name} $ ${product.price.toFixed(2)}`);
+        console.log(`Product: ${product.name} $${product.price.toFixed(2)}`);
       });
       return products;
     })
+
     .catch((err): Product[] => {
       console.error("Could not load products:", err);
-      return []; //if it fails the chain continues with no products
+      return []; // if it fails the chain continues with no products
     })
+
+    // reviews for every product
     .then((products) => {
       console.log("Waiting for Reviews......");
-      //I have 6 reviews so reviewPromises holds 5 pending Promises and I need to wait for them all and Promise.all waits and collects the results
+
+      // one pending Promise per product, all running at once
       const reviewPromises = products.map((product) =>
         fetchProductReviews(product.id),
       );
+
+      // allSettled waits for every Promise, success or failure
       return Promise.allSettled(reviewPromises).then((results) => {
-        //results is an array wherw each slot holds a result object describing what happened
+        // results lines up with products by index
         products.forEach((product, i) => {
-          const result = results[i];//gets product’s result object
-          console.log(`Reviews for ${product.name}:`);
+          const result = results[i]; // this product's result object
+          console.log(`\nReviews for ${product.name}:`);
 
-          if (!result) {//without this there is a warning saying 'result' is possibly 'undefined'
+          if (!result) { // satisfies "result is possibly undefined"
             return;
           }
 
-          //status is either "fulfilled" or "rejected"
-          //use narrowing to check if status is rejected it knows result must be the fulfilled kind
+          // narrowing: after this check, result must be the fulfilled kind
           if (result.status === "rejected") {
-            console.error("Could not load reviews: ", result.reason);//reason holds whatever was passed to reject
+            console.error("  Could not load reviews:", result.reason);
             return;
           }
 
-
-          //if the code makes it here then it knows result must be the fulfilled
-          //so I can use result.value
           const reviews = result.value;
           if (reviews.length === 0) {
             console.log("  No reviews yet");
           }
           reviews.forEach((review) => {
-            console.log(
-              `   ${review.rating}/5 ${review.reviewer}: ${review.comment}`,
-            );
+            console.log(`  ${review.rating}/5 ${review.reviewer}: ${review.comment}`);
           });
         });
-      })
+      });
+    }) 
 
-      .then(() => {
-         console.log("Waiting for the Sales Report......");
-         return fetchSalesReport()
-         .then((salesReport) => {
-            console.log("Sales Report:");
-            console.log(` Total Sales: $${salesReport.totalSales.toFixed(2)}`);
-            console.log(` Units Sold: ${salesReport.unitsSold}`);
-            console.log(` Average price: $${salesReport.averagePrice.toFixed(2)}`);
-         })
-         .catch((err) => {
-            console.error("Could not load sales report:", err);
-         })
-      })
-      //catches anything not handled
-      .catch((err) => {
-        console.error("Error", err);
-      })
-      .finally(() => {
-        console.log("All API calls done");
-      })
+    // sales report
+    .then(() => {
+      console.log("Waiting for the Sales Report......");
+      return fetchSalesReport()
+        .then((salesReport) => {
+          console.log("Sales Report:");
+          console.log(`  Total Sales: $${salesReport.totalSales.toFixed(2)}`);
+          console.log(`  Units Sold: ${salesReport.unitsSold}`);
+          console.log(`  Average price: $${salesReport.averagePrice.toFixed(2)}`);
+        })
+        // only catches sales report errors
+        .catch((err) => {
+          console.error("Could not load sales report:", err);
+        });
     })
-} 
+
+    //final catch
+    .catch((err) => {
+      console.error("Error:", err);
+    })
+
+    //finally
+    .finally(() => {
+      console.log("All API calls have been attempted");
+    });
+}
 
 loadData();

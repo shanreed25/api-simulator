@@ -1,87 +1,140 @@
-import { NetworkError} from "./errors.js";
-import { validateProduct } from "./validators.js";
+import { NetworkError } from "./errors.js";
+import {
+  validateProduct,
+  validateReviews,
+  validateSalesReport,
+} from "./validators.js";
 import type { Product, Review, SalesReport } from "./types.js";
 
 const products: Product[] = [
-    { id: 1, name: "Laptop", price: 1200 },
-    { id: 2, name: "Headphones", price: 200 },
-    { id: 3, name: "Wireless Mouse", price: 45 },                   
-]
+  { id: 1, name: "Laptop", price: 1200 },
+  { id: 2, name: "Headphones", price: 200 },
+  { id: 3, name: "Wireless Mouse", price: 45 },
+];
 
 //Tesyt Products with missing values
 const testProducts = [
-    { id: 1, name: "Laptop"},
-    { id: 2, name: "Headphones", price: 200 },
-    { id: 3, name: "Wireless Mouse", price: 45 },                   
+  { id: 1, name: "Laptop" },
+  { id: 2, name: "Headphones", price: 200 },
+  { id: 3, name: "Wireless Mouse", price: 45 },
 ] as Product[];
 
-
 const reviews: Review[] = [
-  { productId: 1, reviewer: "Maya R.", rating: 5, comment: "Fast and the battery lasts all day." },
-  { productId: 2, reviewer: "Tara J.", rating: 2, comment: "Ear cushions started peeling after a month." },
-  { productId: 3, reviewer: "Shannon R.", rating: 2, comment: "Feels really nice." },
-  { productId: 1, reviewer: "Priya S.", rating: 3, comment: "Good performance, heavier than expected." },
-  { productId: 2, reviewer: "Luis M.", rating: 5, comment: "Noise cancelling works really well." },
-  { productId: 3, reviewer: "Devon K.", rating: 4, comment: "Great scroll and easy movement." },
-  
-]
+  {
+    productId: 1,
+    reviewer: "Maya R.",
+    rating: 5,
+    comment: "Fast and the battery lasts all day.",
+  },
+  {
+    productId: 2,
+    reviewer: "Tara J.",
+    rating: 2,
+    comment: "Ear cushions started peeling after a month.",
+  },
+  {
+    productId: 3,
+    reviewer: "Shannon R.",
+    rating: 2,
+    comment: "Feels really nice.",
+  },
+  {
+    productId: 1,
+    reviewer: "Priya S.",
+    rating: 3,
+    comment: "Good performance, heavier than expected.",
+  },
+  {
+    productId: 2,
+    reviewer: "Luis M.",
+    rating: 5,
+    comment: "Noise cancelling works really well.",
+  },
+  {
+    productId: 3,
+    reviewer: "Devon K.",
+    rating: 4,
+    comment: "Great scroll and easy movement.",
+  },
+];
 
 const salesReport: SalesReport = {
-    totalSales: 50700,
-    unitsSold: 150,
-    averagePrice: 338,//total sales divided by units sold: 50,700 ÷ 150 = 338
-}
+  totalSales: 50700,
+  unitsSold: 150,
+  averagePrice: 338, //total sales divided by units sold: 50,700 ÷ 150 = 338
+};
 
-export const fetchProductCatalog = (): Promise<Product[]> => {//fetchProductCatalog returns a Promise of products
+export const fetchProductCatalog = (): Promise<Product[]> => {
+  //fetchProductCatalog returns a Promise of products
   // return a Promise
-    return new Promise((resolve, reject) =>{
-        //add setTimeout
-        setTimeout(() => {
+  return new Promise((resolve, reject) => {
+    //add setTimeout
+    setTimeout(() => {
+      //set the threshold to 0 and the call always fails
+      if (Math.random() >= 0.8) {
+        reject(new NetworkError("Failed to fetch product catalog"));
+        return;
+      }
+
+      // const invalidData = validateProduct(testProducts);//test invalid data
+      const invalidData = validateProduct(products);
+      if (invalidData) {
+        reject(invalidData);
+        return;
+      }
+
+      resolve(products);
+    }, 1000);
+  });
+};
+
+//takes a productId number and returns a Promise of a review array
+//productId: number means the function expects just the id
+export const fetchProductReviews = (productId: number): Promise<Review[]> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      //set the threshold to 0 and the call always fails
+      if (Math.random() >= 0.8) {
+        reject(
+          new NetworkError(
+            `Failed to fetch reviews for product ID ${productId}`,
+          ),
+        );
+        return;
+      }
+
+      const productReviews = reviews.filter(
+            (review) => review.productId === productId
+        );
+
+      const invalidData = validateReviews(productReviews);
+      if (invalidData) {
+        reject(invalidData);
+        return;
+      }
+
+      resolve(productReviews);
+    }, 1500);
+  });
+};
+
+export const fetchSalesReport = (): Promise<SalesReport> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
             //set the threshold to 0 and the call always fails
             if (Math.random() >= 0.8) {
-                reject(new NetworkError("Failed to fetch product catalog"));
+                reject(new NetworkError("Failed to fetch sales report"));
                 return;
             } 
             
-            // const invalidData = validateProduct(testProducts);//test invalid data
-            const invalidData = validateProduct(products);
+            const invalidData = validateSalesReport(salesReport);
             if (invalidData) {
                 reject(invalidData);
                 return;
             }
             
-            
-            resolve(testProducts)
-            }, 1000)
-    });
+        
+            resolve(salesReport)
+    }, 1000);
+  });
 };
-
-//takes a productId number and returns a Promise of a review array
-//productId: number means the function expects just the id
-export const fetchProductReviews = (productId: number): Promise<Review[]>  => {
-    return new Promise((reslove, reject) => {
-        setTimeout(() => {
-            if (Math.random() < 0.8) {
-                reslove(reviews.filter(r => r.productId === productId))
-            } else {
-                reject(new NetworkError(`Failed to fetch reviews for product with ID: ${productId}`))
-            }
-        }, 1500)
-        
-    }
-)
-}
-
-export const fetchSalesReport = (): Promise<SalesReport>  => {
-    return new Promise((reslove, reject) => {
-        setTimeout(() => {
-            if (Math.random() < 0.8) {
-                reslove(salesReport)
-            } else {
-                reject(new NetworkError("Failed to fetch sales report"))
-            }
-        }, 1000)
-        
-    }
-)
-}
