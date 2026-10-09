@@ -41,10 +41,7 @@ const salesReport: SalesReport = {
     averagePrice: 338,//total sales divided by units sold: 50,700 ÷ 150 = 338
 }
 
-/* Promise<Product[]> tells TypeScript the function returns a Promise 
-    that will eventually hold an array of Product objects
-*/
-export const fetchProductCatalog = (): Promise<Product[]> => {
+export const fetchProductCatalog = (): Promise<Product[]> => {//fetchProductCatalog returns a Promise of products
   // return a Promise
     return new Promise((resolve, reject) =>{
         //add setTimeout
