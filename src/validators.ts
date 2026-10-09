@@ -36,9 +36,6 @@ export function validateReviews(reviews: Partial<Review>[]): DataError | null {
 
     }
 
-
-
-
 }
 
 export function validateSalesReport(salesReport: Partial<SalesReport>[]): DataError | null {
@@ -46,6 +43,5 @@ export function validateSalesReport(salesReport: Partial<SalesReport>[]): DataEr
     for (const report of salesReport){
 
     }
-
 
 }
