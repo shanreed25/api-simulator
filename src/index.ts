@@ -19,30 +19,19 @@ function loadData() {
       return products;
     })
     .catch((err): Product[] => {
-      //log error and continue with no products
       console.error("Could not load products:", err);
       return []; //if it fails the chain continues with no products
     })
     .then((products) => {
-      //=============================this give me a products array
-      //get reviews for every product and display them
       console.log("Waiting for Reviews......");
       //I have 6 reviews so reviewPromises holds 5 pending Promises and I need to wait for them all and Promise.all waits and collects the results
       const reviewPromises = products.map((product) =>
         fetchProductReviews(product.id),
       );
-      //console.log(reviewPromises);//[ Promise { <pending> }, Promise { <pending> }, Promise { <pending> } ]
-
-      //with Promise.all one failure lost all six reviews
-      //Promise.allSettled Instead of rejecting when one call fails,
-      // it waits for every Promise to finish and tells you how each one turned out
-      //returns an array where each iem holds a result object describing what happened instead
       return Promise.allSettled(reviewPromises).then((results) => {
-        //reviewsList is a list of arrays, where each array contains all the reviews for a give product
-        // like [[{productId: 1,reviewer: 'Maya R.'.....}], [{productId: 2, reviewer: 'Tara J.'.....}], [{productId: 3, reviewer: 'Shannon R.'.....}]],
+        //results is an array wherw each slot holds a result object describing what happened
         products.forEach((product, i) => {
           const result = results[i];//gets product’s result object
-          // log product.name
           console.log(`Reviews for ${product.name}:`);
 
           if (!result) {//without this there is a warning saying 'result' is possibly 'undefined'
@@ -69,9 +58,27 @@ function loadData() {
             );
           });
         });
-      });
-    });
-}
+      })
+
+      .then(() => {
+         console.log("Waiting for the Sales Report......");
+         return fetchSalesReport()
+         .then((salesReport) => {
+            console.log("Sales Report:");
+            console.log(` Total Sales: $${salesReport.totalSales.toFixed(2)}`);
+            console.log(` Units Sold: ${salesReport.unitsSold}`);
+            console.log(` Average price: $${salesReport.averagePrice.toFixed(2)}`);
+         })
+         .catch((err) => {
+            console.error("Could not load sales report:", err);
+         })
+      })
+      //catches anything not handled
+      .catch((err) => {
+        console.error("Error", err);
+      })
+    })
+} 
 
 //     .then((salesReport) => {
 //         console.log(salesReport);
