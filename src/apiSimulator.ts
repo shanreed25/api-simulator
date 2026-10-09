@@ -1,31 +1,20 @@
 import { NetworkError} from "./errors.js";
-
-
-
-export interface Product {
-    id: number;
-    name: string;
-    price: number;
-}
-
-export interface Review {
-    productId: number;
-    reviewer: string;
-    rating: number;
-    comment: string;
-}
-
-export interface SalesReport {
-    totalSales: number;
-    unitsSold: number;
-    averagePrice: number;
-}
+import { validateProduct } from "./validators.js";
+import type { Product, Review, SalesReport } from "./types.js";
 
 const products: Product[] = [
     { id: 1, name: "Laptop", price: 1200 },
     { id: 2, name: "Headphones", price: 200 },
     { id: 3, name: "Wireless Mouse", price: 45 },                   
 ]
+
+//Tesyt Products with missing values
+const testProducts = [
+    { id: 1, name: "Laptop"},
+    { id: 2, name: "Headphones", price: 200 },
+    { id: 3, name: "Wireless Mouse", price: 45 },                   
+] as Product[];
+
 
 const reviews: Review[] = [
   { productId: 1, reviewer: "Maya R.", rating: 5, comment: "Fast and the battery lasts all day." },
@@ -49,13 +38,20 @@ export const fetchProductCatalog = (): Promise<Product[]> => {//fetchProductCata
         //add setTimeout
         setTimeout(() => {
             //set the threshold to 0 and the call always fails
-            if (Math.random() < 0.8) {
-                //resolve when the roll is under a threshold such as 0.8
-                resolve(products);
-            } else {
-                //reject with "Failed to fetch product catalog" otherwise
+            if (Math.random() >= 0.8) {
                 reject(new NetworkError("Failed to fetch product catalog"));
+                return;
+            } 
+            
+            // const invalidData = validateProduct(testProducts);//test invalid data
+            const invalidData = validateProduct(products);
+            if (invalidData) {
+                reject(invalidData);
+                return;
             }
+            
+            
+            resolve(testProducts)
             }, 1000)
     });
 };
