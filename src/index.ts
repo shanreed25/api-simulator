@@ -4,7 +4,8 @@ import {
   fetchSalesReport,
 } from "./apiSimulator.js";
 
-import type { Product, Review } from "./apiSimulator.js";
+import type { Product} from "./apiSimulator.js";
+
 
 console.log("Simulation Starting......");
 

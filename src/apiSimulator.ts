@@ -1,4 +1,4 @@
-
+import { NetworkError, DataError } from "./errors.js";
 
 export interface Product {
     id: number;
@@ -53,7 +53,7 @@ export const fetchProductCatalog = (): Promise<Product[]> => {//fetchProductCata
                 resolve(products);
             } else {
                 //reject with "Failed to fetch product catalog" otherwise
-                reject("Failed to fetch product catalog");
+                reject(new NetworkError("Failed to fetch product catalog"));
             }
             }, 1000)
     });
@@ -73,7 +73,7 @@ export const fetchProductReviews = (productId: number): Promise<Review[]>  => {
             if(true === true){//always resloves
                 reslove(reviews.filter(r => r.productId === productId))
             } else {
-                reject(`Failed to fetch reviews for product with ID: ${productId}`)
+                reject(new NetworkError(`Failed to fetch reviews for product with ID: ${productId}`))
             }
         }, 1500)
         
@@ -88,7 +88,7 @@ export const fetchSalesReport = (): Promise<SalesReport>  => {
             if(true === true){//always resloves
                 reslove(salesReport)
             } else {
-                reject("Failed to fetch sales report")
+                reject(new NetworkError("Failed to fetch sales report"))
             }
         }, 1000)
         
