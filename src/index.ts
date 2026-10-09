@@ -77,18 +77,10 @@ function loadData() {
       .catch((err) => {
         console.error("Error", err);
       })
+      .finally(() => {
+        console.log("All API calls done");
+      })
     })
 } 
-
-//     .then((salesReport) => {
-//         console.log(salesReport);
-//     })
-//     /*
-//     one catch at the end here means any failure skips every step after it
-//     */
-//     .catch((err) => {
-//         console.error('Error:', err);
-//     })
-// }
 
 loadData();

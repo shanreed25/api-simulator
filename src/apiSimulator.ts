@@ -50,7 +50,8 @@ export const fetchProductCatalog = (): Promise<Product[]> => {
         //add setTimeout
         setTimeout(() => {
             //set the threshold to 0 and the call always fails
-            if (Math.random() < 0.8) {
+            // if (Math.random() < 0.8) {
+            if(true === true){//always resloves
                 //resolve when the roll is under a threshold such as 0.8
                 resolve(products);
             } else {
@@ -71,7 +72,8 @@ export const fetchProductReviews = (productId: number): Promise<Review[]>  => {
             //     reject(`Failed to fetch reviews for product with ID: ${productId}`)
             // }
 
-            if (Math.random() < 0.8) {
+            // if (Math.random() < 0.8) {
+            if(true === true){//always resloves
                 reslove(reviews.filter(r => r.productId === productId))
             } else {
                 reject(`Failed to fetch reviews for product with ID: ${productId}`)
@@ -85,7 +87,8 @@ export const fetchProductReviews = (productId: number): Promise<Review[]>  => {
 export const fetchSalesReport = (): Promise<SalesReport>  => {
     return new Promise((reslove, reject) => {
         setTimeout(() => {
-            if (Math.random() < 0.8) {
+            // if (Math.random() < 0.8) {
+            if(true === true){//always resloves
                 reslove(salesReport)
             } else {
                 reject("Failed to fetch sales report")
