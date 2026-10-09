@@ -12,7 +12,9 @@ export function validateProduct(products: Partial<Product>[]): DataError | null 
             return new DataError("Missing product id: a product id is required")
         }
 
-
+        if (typeof product.name !== "string" || product.name.trim() === ""){
+            return new DataError(`Product with product id of ${product.id} is missing a name`)
+        }
 
     })
 
