@@ -4,6 +4,7 @@ import type { Product, Review, SalesReport } from "./types.js";
 
 //needs to accepts products with missing fields
 //Partial<Product> is the Product type with every field made optional
+//returns a DataError for the FIRST bad review, or null if all are valid.
 export function validateProduct(products: Partial<Product>[]): DataError | null {
 
      for (const product of products) {
@@ -24,5 +25,27 @@ export function validateProduct(products: Partial<Product>[]): DataError | null 
 
     //if nothing is wrong
     return null;
+
+}
+
+
+
+export function validateReviews(reviews: Partial<Review>[]): DataError | null {
+
+    for (const review of reviews){
+
+    }
+
+
+
+
+}
+
+export function validateSalesReport(salesReport: Partial<SalesReport>[]): DataError | null {
+
+    for (const report of salesReport){
+
+    }
+
 
 }
