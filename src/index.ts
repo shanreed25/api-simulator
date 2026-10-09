@@ -41,7 +41,7 @@ function loadData() {
         // results lines up with products by index
         products.forEach((product, i) => {
           const result = results[i]; // this product's result object
-          console.log(`\nReviews for ${product.name}:`);
+          console.log(`Reviews for ${product.name}:`);
 
           if (!result) { // satisfies "result is possibly undefined"
             return;
