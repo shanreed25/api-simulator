@@ -1,4 +1,4 @@
-import { NetworkError, DataError } from "./errors.js";
+import { NetworkError} from "./errors.js";
 
 
 

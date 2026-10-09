@@ -16,6 +16,10 @@ export function validateProduct(products: Partial<Product>[]): DataError | null 
             return new DataError(`Product with product id of ${product.id} is missing a name`)
         }
 
+        if (typeof product.price !== "number"){
+            return new DataError(`Product with product id of ${product.id} is missing a price`)
+        }
+
     })
 
     //if nothing is wrong
