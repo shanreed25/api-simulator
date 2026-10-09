@@ -1,5 +1,7 @@
 import { NetworkError, DataError } from "./errors.js";
 
+
+
 export interface Product {
     id: number;
     name: string;
@@ -47,8 +49,7 @@ export const fetchProductCatalog = (): Promise<Product[]> => {//fetchProductCata
         //add setTimeout
         setTimeout(() => {
             //set the threshold to 0 and the call always fails
-            // if (Math.random() < 0.8) {
-            if(true === true){//always resloves
+            if (Math.random() < 0.8) {
                 //resolve when the roll is under a threshold such as 0.8
                 resolve(products);
             } else {
@@ -64,13 +65,7 @@ export const fetchProductCatalog = (): Promise<Product[]> => {//fetchProductCata
 export const fetchProductReviews = (productId: number): Promise<Review[]>  => {
     return new Promise((reslove, reject) => {
         setTimeout(() => {
-            //code to force failure for testing
-            // if(productId === 2){
-            //     reject(`Failed to fetch reviews for product with ID: ${productId}`)
-            // }
-
-            // if (Math.random() < 0.8) {
-            if(true === true){//always resloves
+            if (Math.random() < 0.8) {
                 reslove(reviews.filter(r => r.productId === productId))
             } else {
                 reject(new NetworkError(`Failed to fetch reviews for product with ID: ${productId}`))
@@ -84,8 +79,7 @@ export const fetchProductReviews = (productId: number): Promise<Review[]>  => {
 export const fetchSalesReport = (): Promise<SalesReport>  => {
     return new Promise((reslove, reject) => {
         setTimeout(() => {
-            // if (Math.random() < 0.8) {
-            if(true === true){//always resloves
+            if (Math.random() < 0.8) {
                 reslove(salesReport)
             } else {
                 reject(new NetworkError("Failed to fetch sales report"))
