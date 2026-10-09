@@ -41,7 +41,19 @@ export function validateReviews(reviews: Partial<Review>[]): DataError | null {
 export function validateSalesReport(salesReport: Partial<SalesReport>[]): DataError | null {
 
     for (const report of salesReport){
+        if(typeof report.totalSales !== "number"){
+            return new DataError("Sales report is missing total sales")
+        }
+
+        if (typeof report.unitsSold !== "number"){
+            return new DataError("Sales report is missing units sold")
+        }
+
+        if (typeof report.averagePrice !== "number"){
+            return new DataError("Sales report is missing average price")
+        }
 
     }
+    return null;
 
 }
